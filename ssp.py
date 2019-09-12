@@ -12,7 +12,8 @@ img = cv2.imread('unzoom.jpg',0)
 img = img.astype(np.float32)/255
 print(img.min(),img.max())
 img = cv2.GaussianBlur(img,ksize=(0,0),sigmaX =anti_alias)
-img = imresize(img,200,'bilinear')
+# img = imresize(img,200,'bilinear')
+img = cv2.resize(img,None,fx=2,fy=2)
 img = cv2.GaussianBlur(img,ksize=(0,0),sigmaX = 1.0)
 
 
@@ -37,7 +38,8 @@ def build_scale_space(img,num_octave=4,m_numIntervals=2):
         scale_space.append(i_th_octave)
         if i<num_octave-1:
             table[i+1][0] = table[i][m_numIntervals];
-            img = imresize(img,50,'bilinear')
+            # img = imresize(img,50,'bilinear')
+            img = cv2.resize(img,None,fx=0.5,fy=0.5)
     return scale_space
 
 
@@ -45,4 +47,5 @@ ssp = build_scale_space(img)
 
 DoGs=[]
 for i in ssp:
+    print(i.dtype)
     DoGs.append(i[:,:,np.arange(0,m_numIntervals+3-1)]-i[:,:,np.arange(1,m_numIntervals+3)])
